@@ -17,7 +17,7 @@ export function EmployeeDataList(){
 
     return(
         <div>
-            <Table data={data} menuarray={distinctGender} />
+            <Table data={data} menuarray={distinctGender} setData={setData} />
         </div>
     )
 }

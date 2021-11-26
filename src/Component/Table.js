@@ -1,12 +1,11 @@
 import React, { useMemo, useState, useEffect,useCallback} from "react";
 import MaterialTable from 'material-table';
 import { COLOMNS } from "./Columns";
-import MOCK_Data from './MOCK_DATA.json';
 import debounce from 'lodash.debounce';
 import {tableIcons} from './TableIcon';
-import {Select,MenuItem} from '@material-ui/core';
 
-export default function Table({data, menuarray}){
+
+export default function Table({data, menuarray, setData}){
 
     const tableData = data; 
     const menuArray = menuarray; 
@@ -17,20 +16,31 @@ export default function Table({data, menuarray}){
 
     const columns = COLOMNS;
     const title = "Employee Table"
-    const url = 'http://localhost:8000/data';
+    let url = 'http://localhost:8000/data?';
+
+    // get filtered data
      const getData =()=>{
+                        if(keyWord){
+                            let filter = `${columnName}${'='}${keyWord}`
+                            url+= filter;
+                        }
+                        console.log(url);
                         fetch(url).then(res=>{
                             res.json().then(res=>{
                                  // prepare your data and then call resolve like this:
                                console.log(res);
+                               setData(res);
+                               keyWord = '';
+                               columnName = '';
+                               url = 'http://localhost:8000/data?';
+
                             })
                         });
+                      
                         console.log(keyWord)
 
      }
 
-
-    
     const getSearchKeyWord=(e)=>{
         keyWord = e.target.value;  //set search word
         columnName = e.target.id;  // set column Name
@@ -41,7 +51,7 @@ export default function Table({data, menuarray}){
     const debounseChangeHandeler = useMemo(
       () => debounce(getSearchKeyWord, 3000)
     , []);
-   
+
     return(
         <div>
             <MaterialTable  
@@ -52,14 +62,11 @@ export default function Table({data, menuarray}){
                         filtering:true,
                         pagin:true,
                         pageSizeOptions:[,5,10,20,50,100],
-                        search:true,
+                        search:false,
                         debounceInterval: 1000,
                         padding: "dense",
-                        
-
-    
                     }
-                    }
+                  }
                 columns={columns} 
                 // data={query =>
                 //     new Promise((resolve, reject) => {
@@ -100,36 +107,30 @@ export default function Table({data, menuarray}){
                               if (col.field) {
                                 return (
                                   <td>
-                                
                                     {col.type !== 'select'?
-                                    
-                                  
                                     <span>
-                                    <input  
-                                    id={index}
-                                    type={col.type}
-                                    placeholder={"search "+col.field}
-                                    id={col.field}
-                                   
-                                    onChange={debounseChangeHandeler}
-                                  
-                                    />
-                                  </span>:''
-                                //   <Select
-                                //       labelId="demo-simple-select-standard-label"
-                                //       id="demo-simple-select-standard"
-                                //       value={age}
-                                //       onChange={handleChange}
-                                //       label="Age"
-                                //     >
-                                //       <MenuItem value="">
-                                //         <em>None</em>
-                                //       </MenuItem>
-                                //       <MenuItem value={10}>Ten</MenuItem>
-                                //       <MenuItem value={20}>Twenty</MenuItem>
-                                //       <MenuItem value={30}>Thirty</MenuItem>
-                                // </Select>
-                                                          }
+                                      <input  
+                                      id={index}
+                                      type={col.type}
+                                      placeholder={"search "+col.field}
+                                      id={col.field}
+                                      onChange={debounseChangeHandeler}
+                                      />
+                                    </span>:
+                                    <select label="Age" id={col.field}  name={col.field}
+                                     onChange={debounseChangeHandeler} >
+                                      {
+                                        menuArray.map((item,index)=>{
+                                        return <option 
+                                          id={index}
+                                          label={item}
+                                          value={item}
+                                          key={index}
+                                         
+                                      >{item}</option>})
+                                      } 
+                                    </select>
+                                    }
                                   </td>
                                 );
                               }
@@ -139,10 +140,8 @@ export default function Table({data, menuarray}){
                       );
                     },
                   }}
-
             />
         </div>
-
     )
 }
 

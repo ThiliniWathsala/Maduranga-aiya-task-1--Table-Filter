@@ -6,16 +6,15 @@ import debounce from 'lodash.debounce';
 import {tableIcons} from './TableIcon';
 import {Select,MenuItem} from '@material-ui/core';
 
-export default function Table(){
-    
-    const [tableData, setTableData] = useState(MOCK_Data);
-    const [searchKeyWord,setSearchKeyWord] = useState('');
-    const [column,setColumn] = useState('');
-    const [firstName, setFirstName] = useState('');
-    let keyWord='';
-    
+export default function Table({data, menuarray}){
 
-    // const columns = useMemo(() => COLOMNS, []);
+    const tableData = data; 
+    const menuArray = menuarray; 
+    // const [tableData, setTableData] = useState(data);
+    let keyWord='';
+    let columnName = '';
+
+
     const columns = COLOMNS;
     const title = "Employee Table"
     const url = 'http://localhost:8000/data';
@@ -33,14 +32,12 @@ export default function Table(){
 
     
     const getSearchKeyWord=(e)=>{
-        keyWord = e.target.value;
+        keyWord = e.target.value;  //set search word
+        columnName = e.target.id;  // set column Name
         getData();    
     }
 
-    // const debounseChangeHandeler = useCallback(
-    //   debounce(getSearchKeyWord,3000)
-    //   ,[],
-    // )
+    // set a delay to onChange events, so we can trigger api call after type search word
     const debounseChangeHandeler = useMemo(
       () => debounce(getSearchKeyWord, 3000)
     , []);
@@ -53,8 +50,8 @@ export default function Table(){
                 options={
                     {
                         filtering:true,
-                        // pagin:true,
-                        // pageSizeOptions:[,5,10,20,50,100],
+                        pagin:true,
+                        pageSizeOptions:[,5,10,20,50,100],
                         search:true,
                         debounceInterval: 1000,
                         padding: "dense",
@@ -96,8 +93,6 @@ export default function Table(){
                 components={{
                     FilterRow: (rowProps) => {
                       const { columns } = rowProps;
-                      console.log(columns)
-            
                       return (
                         <>
                           <tr>
@@ -105,11 +100,13 @@ export default function Table(){
                               if (col.field) {
                                 return (
                                   <td>
+                                
                                     {col.type !== 'select'?
                                     
                                   
                                     <span>
                                     <input  
+                                    id={index}
                                     type={col.type}
                                     placeholder={"search "+col.field}
                                     id={col.field}

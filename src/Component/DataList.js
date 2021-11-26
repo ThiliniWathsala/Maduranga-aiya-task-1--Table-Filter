@@ -14,13 +14,10 @@ export function EmployeeDataList(){
 
     const distinctGender = [...new Set(data.map(user=>user.gender))];
 
-    console.log(distinctGender );
-
 
     return(
         <div>
-            <Table/>
-
+            <Table data={data} menuarray={distinctGender} />
         </div>
     )
 }

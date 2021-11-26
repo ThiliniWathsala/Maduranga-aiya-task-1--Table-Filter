@@ -4,7 +4,8 @@ import Table from "./Table";
 export function EmployeeDataList(){
 
     const [data,setData] = useState([]);
-       const url = 'http://localhost:8000/data';
+    const url = 'http://localhost:8000/data?';
+    const title="Employee Table"
 
     useEffect(() =>
         fetch(url)
@@ -17,7 +18,8 @@ export function EmployeeDataList(){
 
     return(
         <div>
-            <Table data={data} menuarray={distinctGender} setData={setData} />
+
+            <Table data={data} menuarray={distinctGender} setData={setData} url={url} title={title} />
         </div>
     )
 }

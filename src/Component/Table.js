@@ -5,34 +5,30 @@ import debounce from 'lodash.debounce';
 import {tableIcons} from './TableIcon';
 
 
-export default function Table({data, menuarray, setData}){
+export default function Table({data, menuarray, setData, url, title}){
 
     const tableData = data; 
     const menuArray = menuarray; 
-    // const [tableData, setTableData] = useState(data);
     let keyWord='';
     let columnName = '';
-
-
     const columns = COLOMNS;
-    const title = "Employee Table"
-    let url = 'http://localhost:8000/data?';
+    let baseUrl = url;
 
     // get filtered data
      const getData =()=>{
                         if(keyWord){
                             let filter = `${columnName}${'='}${keyWord}`
-                            url+= filter;
+                            baseUrl+= filter;
                         }
-                        console.log(url);
-                        fetch(url).then(res=>{
+                        console.log(baseUrl);
+                        fetch(baseUrl).then(res=>{
                             res.json().then(res=>{
                                  // prepare your data and then call resolve like this:
                                console.log(res);
                                setData(res);
                                keyWord = '';
                                columnName = '';
-                               url = 'http://localhost:8000/data?';
+                               baseUrl = url;
 
                             })
                         });
@@ -117,7 +113,7 @@ export default function Table({data, menuarray, setData}){
                                       onChange={debounseChangeHandeler}
                                       />
                                     </span>:
-                                    <select label="Age" id={col.field}  name={col.field}
+                                    <select id={col.field}  name={col.field}
                                      onChange={debounseChangeHandeler} >
                                       {
                                         menuArray.map((item,index)=>{

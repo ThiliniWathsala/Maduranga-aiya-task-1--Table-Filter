@@ -3,10 +3,10 @@ import MaterialTable from 'material-table';
 import { COLOMNS } from "./Columns";
 import MOCK_Data from './MOCK_DATA.json';
 import debounce from 'lodash.debounce';
-// import MenuItem from '@mui/material/MenuItem';
-import {tableIcons} from './TableIcon'
+import {tableIcons} from './TableIcon';
+import {Select,MenuItem} from '@material-ui/core';
 
-export function Table(){
+export default function Table(){
     
     const [tableData, setTableData] = useState(MOCK_Data);
     const [searchKeyWord,setSearchKeyWord] = useState('');
@@ -67,11 +67,9 @@ export function Table(){
                 // data={query =>
                 //     new Promise((resolve, reject) => {
                 //         let url = 'http://localhost:3006/data?'
-
                 //         if(query.orderBy){
                 //             url+=`&_sort=${query.orderBy.field}&_order=${query.orderDirection}`
-                //         }
-                        
+                //         }       
                 //         if(query.filters.length){
                 //             const filter = (query.filters.map(item=>{
                 //               return `&${item.column.field} ${item.operator} ${item.value}`
@@ -80,8 +78,7 @@ export function Table(){
                 //             url+= filter.join('');
                 //         }
                 //         url+=`&_page=${query.page+1}`
-                //         url+=`&_limit=${query.pageSize}`
-                        
+                //         url+=`&_limit=${query.pageSize}`      
                 //         fetch(url).then(res=>{
                 //             res.json().then(res=>{
                 //                  // prepare your data and then call resolve like this:
@@ -92,8 +89,6 @@ export function Table(){
                 //                 });
                 //             })
                 //         })
-
-                       
                 //     })
                 // }
           
@@ -138,9 +133,6 @@ export function Table(){
                                 //       <MenuItem value={30}>Thirty</MenuItem>
                                 // </Select>
                                                           }
-
-                                
-                                   
                                   </td>
                                 );
                               }
